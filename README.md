@@ -116,6 +116,8 @@ You will see gaps in register ranges map. To calculate `register_count`, you nee
 ## References & thanks
 - https://github.com/odya/esphome-powmr-hybrid-inverter
   This is a source project.
+- https://github.com/GamesterUnknown/PowMR_ESPHome
+- The second source project
 - https://github.com/leodesigner/powmr_comm 
   Great research on PowMr registers and C++ firmware code with MQTT. Thanks to author, it helps me a lot.
 - https://github.com/syssi/esphome-smg-ii
