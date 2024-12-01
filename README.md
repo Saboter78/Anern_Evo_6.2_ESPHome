@@ -17,6 +17,8 @@ Known issues:
 ## Compatibility
 All models that are supported by the [**WIFI-VM**](https://powmr.com/products/powmr-wifi-module-with-rs232-remote-monitoring-solution-wifi-vm) device should work:
 
+- [**Anern SCI EVO 6.2-48V**](https://www.anern.com/products/hybrid-solar-inverter-evo-series-3.6kw-6.2.kw/)
+- 
 - [**POW-HVM1.5H-12V**](https://powmr.com/products/all-in-one-inverter-charger-1500watt-220vac-12vdc)
 - **POW-HVM2.0H-12V**
 - [**POW-HVM2.4H-24V**](https://web.archive.org/web/20230329235125/https://powmr.com/inverters/all-in-one-inverter-chargers/powmr-2400watt-dc-24v-ac-220v-solar-inverter-charger)
@@ -29,6 +31,8 @@ All models that are supported by the [**WIFI-VM**](https://powmr.com/products/po
 
 ### Tested models
 
+
+- **Anern SCI EVO 6.2-48V**
 - **POW-HVM3.2H-24V**
 - **POW-HVM6.2M-48V**
 
@@ -50,16 +54,12 @@ Also Ota upgrade might be failed due to absent of EEPROM memory for downloading 
 6) Flash firmware to your ESP32
 
 
-## PZEM module
+## PZEM module #commented
 In version 1.2, a [PZEM](https://esphome.io/components/sensor/pzem004t) module was added for measuring parameters of the input AC grid. If you do not wish to use it, comment out the include of the corresponding module in the [main.yaml](/src/main.yaml) file.
 
 ## Inverter card
 For easy integration into Home Assistant, you can use the examples of inverter cards. 
 The following custom plugins are required: [sunsynk-power-flow-card](https://github.com/slipx06/sunsynk-power-flow-card), [stack-in-card](https://github.com/custom-cards/stack-in-card), [tabbed-card](https://github.com/kinghat/tabbed-card), [canary](https://github.com/jcwillox/lovelace-canary).
-
-## Optimize modbus communications
-ESPHome reads sequential Modbus registers in one batch. If you have gaps in register addresses, you need to use the `register_count` parameter to skip N registers and continue the batch.
-[Details in ESPHome docs](https://esphome.io/components/sensor/modbus_controller#modbus-register-count).
 
 You can debug your register ranges by setting the global log level to `VERBOSE` and muting all "noisy" components except the `modbus_controller`.
 ```yaml
