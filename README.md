@@ -4,7 +4,7 @@ This is modifiyed updated version of ESPHome PowMr Hybrid Inverter(https://githu
 What was changed:
 1. All sensors combined in one file. 
 2. Corrected query and calculation of Power and Power Factor
-3. All registers (starting from 5002) are read one by one in other case it will not read values when charging.
+3. All registers are read one by one in other case it will not read values when charging.
 
 Known issues:
  1. Using text_sensor instead of regular sensor lead to hang of ESP immidiatly after start. Root case unknown.
