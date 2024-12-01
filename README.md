@@ -1,4 +1,4 @@
-# My ESPHome PowMr Hybrid Inverter
+# My ESPHome Anern Hybrid Inverter
 This is modifiyed updated version of ESPHome PowMr Hybrid Inverter(https://github.com/odya/esphome-powmr-hybrid-inverter).
 
 What was changed:
