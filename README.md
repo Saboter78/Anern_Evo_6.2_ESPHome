@@ -4,17 +4,14 @@ This is modifiyed updated version of ESPHome PowMr Hybrid Inverter(https://githu
 What was changed:
 1. All sensors combined in one file. 
 2. Corrected query and calculation of Power and Power Factor
-3. Optimied Modbus registers query:
-   1. 14 registers starting from 4502
-   2. 19 registers starting from 4516
-   3. 19 registers starting from 4539
-   4. config registers (starting from 5002) are read one by one in other case it will not read values.
+3. All registers (starting from 5002) are read one by one in other case it will not read values when charging.
 
 Known issues:
  1. Using text_sensor instead of regular sensor lead to hang of ESP immidiatly after start. Root case unknown.
  2. In some cases ESP hang after otp update via WiFI.
 
 ## Compatibility
+Model with Wi-Fi Plug Pro-05
 All models that are supported by the [**WIFI-VM**](https://powmr.com/products/powmr-wifi-module-with-rs232-remote-monitoring-solution-wifi-vm) device should work:
 
 - [**Anern SCI EVO 6.2-48V**](https://www.anern.com/products/hybrid-solar-inverter-evo-series-3.6kw-6.2.kw/)
