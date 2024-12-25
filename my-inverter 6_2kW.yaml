@@ -1157,9 +1157,9 @@ text_sensor:
       if (id(charger_status_raw).state == 10) {
         return std::string("Discharge");
       } else if (id(charger_status_raw).state == 11) {
-        return std::string("Bulk CC");
+        return std::string("Bulk");
       } else if (id(charger_status_raw).state == 12) {
-        return std::string("Bulk CV");
+        return std::string("Adsortpion");
       } else if (id(charger_status_raw).state == 13) {
         return std::string("Float");
       } else {
