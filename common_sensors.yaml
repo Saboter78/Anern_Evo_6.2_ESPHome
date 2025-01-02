@@ -5,8 +5,14 @@ sensor:
     entity_category: "diagnostic"
     device_class: duration
     update_interval: 60s
+  - platform: internal_temperature
+    name: "ESP Temperature"
+    update_interval: 60s    
   - platform: wifi_signal
     name: "RSSI"
     id: wifi_rssi
     entity_category: "diagnostic"
     update_interval: 60s
+button:
+  - platform: restart
+    name: "ESP Restart"
