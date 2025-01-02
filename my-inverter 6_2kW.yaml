@@ -1,20 +1,12 @@
-########################################################################
-#       Attntion. All voltage settings are for 15S LiFePo4 battery     #    
-#   If you have 16S or other type battery edit this file for yourself  #
-########################################################################
-
 substitutions:
+  name: Inverter
   device_name: "inverter"
-  friendly_name: My Inverter
+  friendly_name: "My Inverter"
   device_description: "Monitor and control an Inverter"
-  node_name: "inverter"
+  node_name: "Inverter"
   node_id: inverter
-#  tx_pin: GPIO4
-#  rx_pin: GPIO5
-  inverter_tx_pin: GPIO2 #zero
-  inverter_rx_pin: GPIO1 #zero
-#  inverter_tx_pin: GPIO17 #wroom
-#  inverter_rx_pin: GPIO18 #wroom
+  inverter_tx_pin: GPIO17
+  inverter_rx_pin: GPIO18
   inverter_voltage_offset: "0"
   update_interval: 7s # Minimum 10s recommended to avoid duplicate command errors
   select_skip_updates: "6"
@@ -31,6 +23,7 @@ esphome:
     version: 1.3.3
   platformio_options:
     board_build.flash_mode: dio
+    board_build.flash_size: 16MB
   
 esp32:
   board: esp32-s3-devkitc-1
@@ -44,7 +37,7 @@ esp32:
     # # Advanced tweaking options
     # #advanced:
       # #ignore_efuse_mac_crc: false
-  flash_size: 4MB  
+  flash_size: 16MB
 
 wifi:
   ssid: !secret wifi_ssid
@@ -77,6 +70,7 @@ time:
 web_server:
  port: 80
  local: true
+ version: 3
 #  ota: false  
 
 api:
@@ -111,7 +105,7 @@ uart:
 modbus:
   - id: modbus_inverter
     uart_id: uart_inverter
-    send_wait_time: 500ms
+    send_wait_time: 600ms
   
   # - id: modbus_pzem
     # uart_id: uart_pzem
@@ -123,7 +117,7 @@ modbus_controller:
     address: 0x05
     modbus_id: modbus_inverter
     setup_priority: -10
-    offline_skip_updates: 100
+    offline_skip_updates: 5
     #command_throttle: 1s
     update_interval: ${update_interval}
   
@@ -195,10 +189,6 @@ sensor:
     # update_interval: ${pzem_update_interval}
     # lambda: |-
       # return id(pzem_grid_current).state * id(pzem_grid_voltage).state * id(pzem_grid_power_factor).state;
-     
-  ###################################
-  # Read first group (14 registers) #
-  ###################################
 
   - platform: modbus_controller
     modbus_controller_id: smg_inverter
@@ -480,11 +470,6 @@ sensor:
     # lambda: |-
       # return swapBytes(x);
 
-  ####################################
-  # Read second group (19 registers) #
-  ####################################
-
-
   # - platform: modbus_controller
     # modbus_controller_id: smg_inverter
     # name: "Unknown4516"
@@ -765,10 +750,6 @@ sensor:
     lambda: |-
       return swapBytes(x);
 
-  ####################################
-  # Read third group (19 registers)  #
-  ####################################
-
   # - platform: modbus_controller
     # modbus_controller_id: smg_inverter
     # name: "Unknown4539"
@@ -865,10 +846,6 @@ sensor:
     lambda: |-
       return swapBytes(x);
 
-  ####################################
-  # Read second group (16 registers) #
-  ####################################
-
   - platform: modbus_controller
     modbus_controller_id: smg_inverter
     name: "Charging Voltage Bulk"
@@ -882,6 +859,11 @@ sensor:
     unit_of_measurement: "V"
     lambda: |-
       return swapBytes(x);
+#    on_value:
+#      then:
+#        - number.set:
+#            id: charging_voltage_bulk
+#            value: !lambda "return x;"
 
   - platform: modbus_controller
     modbus_controller_id: smg_inverter
@@ -896,6 +878,11 @@ sensor:
     unit_of_measurement: "V"
     lambda: |-
       return swapBytes(x);
+#    on_value:
+#      then:
+#        - number.set:
+#            id: charging_voltage_float
+#            value: !lambda "return x;"
 
   - platform: modbus_controller
     modbus_controller_id: smg_inverter
@@ -934,7 +921,7 @@ sensor:
     register_type: holding
     value_type: U_WORD
     lambda: |-
-      return swapBytes(x);
+      return swapBytes(x); 
 
   - platform: modbus_controller
     modbus_controller_id: smg_inverter
@@ -1017,7 +1004,7 @@ sensor:
     value_type: U_WORD
     lambda: |-
       return swapBytes(x);
-    unit_of_measurement: "˚C"
+    unit_of_measurement: "°C"
     device_class: temperature
     state_class: measurement
       
@@ -1159,7 +1146,7 @@ text_sensor:
       } else if (id(charger_status_raw).state == 11) {
         return std::string("Bulk");
       } else if (id(charger_status_raw).state == 12) {
-        return std::string("Adsortpion");
+        return std::string("Absorption");
       } else if (id(charger_status_raw).state == 13) {
         return std::string("Float");
       } else {
@@ -1196,6 +1183,7 @@ select:
     optionsmap:
       "OFF": 0
       "ON": 1
+
 #Menu6 -5005
   # - platform: modbus_controller
     # modbus_controller_id: smg_inverter
@@ -1385,11 +1373,11 @@ select:
     address: 5025
     value_type: U_WORD
     optionsmap:
-      "44": 440
-      "45": 450
-      "46": 460
-      "47": 470
       "48": 480
+      "49": 490
+      "50": 500
+      "51": 510
+      "52": 520
       
 #Menu13 - 5026
   - platform: modbus_controller
@@ -1404,15 +1392,15 @@ select:
     value_type: U_WORD
     optionsmap:
       "FULL": 0
-      "46": 460
-      "47": 470
-      "48": 480
       "49": 490
       "50": 500
       "51": 510
       "52": 520
       "53": 530
       "54": 540
+      "55": 550
+      "56": 560
+      "57": 570
       
   #Menu26 - 5027  Bulk charging voltage
   - platform: modbus_controller
@@ -1426,15 +1414,18 @@ select:
     address: 5027
     value_type: U_WORD
     optionsmap:
-      "3.35 x cell 50.2 V": 502
-      "3.36 x cell 50.4 V": 504
-      "3.40 x cell 51 V": 510
-      "3.45 x cell 51.7 V": 517
-      "3.50 x cell 52.5 V": 525
-      "3.55 x cell 53.2 V": 532
-      "3.60 x cell 54 V": 540
-      "3.65 x cell 54.7 V": 547
-
+      "3.36 x cell 53.8 V": 538
+      "3.40 x cell 54.4 V": 544
+      "3.42 x cell 54.7 V": 547
+      "3.45 x cell 55.2 V": 552
+      "3.48 x cell 55.6 V": 556
+      "3.50 x cell 56.0 V": 560
+      "3.52 x cell 56.4 V": 564
+      "3.55 x cell 56.8 V": 568
+      "3.57 x cell 57.2 V": 572
+      "3.58 x cell 57.3 V": 573
+      "3.59 x cell 57.4 V": 574
+  
   #Menu27 - 5028 Floating charging voltage
   - platform: modbus_controller
     modbus_controller_id: smg_inverter
@@ -1447,13 +1438,17 @@ select:
     address: 5028
     value_type: U_WORD
     optionsmap:
-      "3.35 x cell 50.2 V": 502
-      "3.36 x cell 50.4 V": 504
-      "3.40 x cell 51 V": 510
-      "3.45 x cell 51.7 V": 517
-      "3.50 x cell 52.5 V": 525
-      "3.55 x cell 53.2 V": 532
-      "3.60 x cell 54 V": 540
+      "3.36 x cell 53.8 V": 538
+      "3.40 x cell 54.4 V": 544
+      "3.42 x cell 54.7 V": 547
+      "3.45 x cell 55.2 V": 552
+      "3.48 x cell 55.6 V": 556
+      "3.50 x cell 56.0 V": 560
+      "3.52 x cell 56.4 V": 564
+      "3.55 x cell 56.8 V": 568
+      "3.57 x cell 57.2 V": 572
+      "3.58 x cell 57.3 V": 573
+      "3.59 x cell 57.6 V": 574
    
     #Menu28 - 5029 Low DC cut-off voltage
   - platform: modbus_controller
@@ -1467,20 +1462,51 @@ select:
     address: 5029
     value_type: U_WORD
     optionsmap:
-      "42 V": 420
-      "42.5 V": 425
-      "43 V": 430
-      "43.5 V": 435
-      "44 V": 440
-      "44.5 V": 445
-      "45 V": 450
-      "45.5 V": 455
-      "46 V": 460
-      "46.5 V": 465
-      "47 V": 470
-      "47.5 V": 475
+      "2.75 x cell 44.0 V": 440
+      "2.8 x cell 44.8 V": 448
+      "2.85 x cell 45.6 V": 456
+      "2.9 x cell 46.4 V": 464
+      "2.95 x cell 47.2 V": 472
+      "3.0 x cell 48.0 V": 480
+      "3.05 x cell 48.8 V": 488
+      "3.1 x cell 49.6 V": 496
 
   #Menu29 - 5030 Battery equalization voltage
-  #Menu33 - 5031 Battery equalized time
+  #Menu33 - 5031 Battery equalized time 
   #Menu34 - 5032 Battery equalized timeout
   #Menu35 - 5033 Equalization interval
+
+# number:
+  # # Menu26 - 5027 Bulk charging voltage
+  # - platform: modbus_controller
+    # modbus_controller_id: smg_inverter
+    # name: "Menu 26: Charging Voltage Bulk"
+    # id: charging_voltage_bulk
+    # force_new_range: true
+    # register_type: holding  # Укажите правильный тип регистра
+    # address: 5027
+    # value_type: U_WORD
+    # min_value: 53.8  # Минимальное значение
+    # max_value: 58.2  # Максимальное значение
+    # step: 0.1        # Шаг изменения значения
+    # entity_category: config
+    # unit_of_measurement: "V"
+    # write_lambda: |-
+      # return x * 10;
+
+  # # Menu27 - 5028 Floating charging voltage
+  # - platform: modbus_controller
+    # modbus_controller_id: smg_inverter
+    # name: "Menu 27: Charging Voltage Float"
+    # id: charging_voltage_float
+    # force_new_range: true
+    # register_type: holding  # Укажите правильный тип регистра
+    # address: 5028
+    # value_type: U_WORD
+    # min_value: 53.8  # Минимальное значение
+    # max_value: 57.6  # Максимальное значение
+    # step: 0.1        # Шаг изменения значения
+    # entity_category: config
+    # unit_of_measurement: "V"
+    # write_lambda: |-
+      # return x * 10;
