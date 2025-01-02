@@ -1,15 +1,59 @@
 type: custom:sunsynk-power-flow-card
-cardstyle: compact
+cardstyle: lite
 show_solar: false
 battery:
-  energy: 4800
+  count: 2
   shutdown_soc: 5
-  show_daily: false
-  soc_end_of_charge: 100
   auto_scale: true
-  max_power: "4800"
   path_threshold: 3
-  invert_power: true
+  invert_power: false
+  show_remaining_energy: true
+  dynamic_colour: true
+  animate: true
+  linear_gradient: true
+  soc_end_of_charge: 100
+  show_daily: false
+  charge_colour:
+    - 255
+    - 187
+    - 0
+  colour:
+    - 13
+    - 194
+    - 0
+  show_absolute: false
+  max_power: 12400
+  energy: 5120
+battery1:
+  shutdown_soc: 5
+  shutdown_soc_offgrid: 10
+  soc_end_of_charge: 100
+  invert_power: false
+  auto_scale: true
+  dynamic_colour: true
+  linear_gradient: true
+  show_remaining_energy: true
+  show_absolute: false
+  energy: 5120
+battery2:
+  shutdown_soc: 5
+  soc_end_of_charge: 100
+  invert_power: false
+  auto_scale: true
+  dynamic_colour: true
+  linear_gradient: true
+  show_remaining_energy: true
+  show_absolute: false
+  energy: 5120
+  charge_colour:
+    - 255
+    - 187
+    - 0
+  colour:
+    - 13
+    - 194
+    - 0
+  animate: true
 solar:
   show_daily: false
   mppts: 1
@@ -22,29 +66,65 @@ load:
   load3_name: Насос
   load3_icon: mdi:water-pump
   show_daily_aux: false
+  off_colour:
+    - 39
+    - 221
+    - 200
+  dynamic_icon: true
+  dynamic_colour: true
+  auto_scale: true
 grid:
   show_daily_buy: false
   show_daily_sell: false
   show_nonessential: true
   auto_scale: true
-  load1_icon: sensor.0x804b50fffea4b87a_voltage
+  load1_icon: ""
   show_absolute: true
+  colour:
+    - 116
+    - 167
+    - 255
+  no_grid_colour:
+    - 145
+    - 145
+    - 145
+  grid_off_colour:
+    - 255
+    - 31
+    - 31
+  grid_name: ДТЕК
+  max_power: 5500
+  off_threshold: 170
 entities:
   inverter_voltage_154: sensor.inverter_load_voltage
-  battery_voltage_183: sensor.bms_total_voltage
-  battery_soc_184: sensor.bms_state_of_charge
-  battery_power_190: sensor.bms_power
-  battery_current_191: sensor.bms_current
+  battery_voltage_183: sensor.bms_pack_1_voltage
+  battery_soc_184: sensor.bms_pack_1_soc
+  battery_current_191: sensor.bms_pack_1_current
   grid_ct_power_172: sensor.0x804b50fffea4b87a_power
-  battery_temp_182: sensor.bms_environment_temperature
-  battery_rated_capacity: sensor.bms_full_capacity
-  battery_status: sensor.bms_warnings
-  battery_soh: sensor.bms_state_of_health
+  battery_temp_182: sensor.bms_pack_1_temp_max
+  battery_soh: sensor.bms_pack_1_soh
   load_frequency_192: sensor.inverter_load_frequency
   inverter_current_164: sensor.inverter_load_current
   inverter_power_175: sensor.inverter_load_power_3
-  grid_voltage: sensor.0x804b50fffea4b87a_voltage
+  grid_voltage: sensor.inverter_grid_voltage
   essential_power: sensor.inverter_load_power
+  battery2_current_191: sensor.bms_pack_2_current
+  battery2_temp_182: sensor.bms_pack_1_temp_max
+  battery2_voltage_183: sensor.bms_pack_2_voltage
+  battery2_soc_184: sensor.bms_pack_2_soc
+  battery2_soh: sensor.bms_pack_2_soh
+  battery_rated_capacity: "100"
+  battery2_rated_capacity: "100"
+  battery_status: sensor.bms_pack_1_operation_mode
+  battery2_status: sensor.bms_pack_2_operation_mode
+  battery_power_190: sensor.bms_pack_1_power
+  battery2_power_190: sensor.bms_pack_2_power
+  day_battery_charge_70: sensor.bms_pack_1_charged
+  day_battery_discharge_71: sensor.bms_pack_1_discharged
+  priority_load_243: sensor.inverter_output_source_priority
+  dc_transformer_temp_90: sensor.inverter_temperature
+  grid_connected_status_194: binary_sensor.inverter_on_grid
+  grid_ct_power_total: sensor.0x804b50fffea4b87a_power
 show_grid: true
 show_battery: true
 large_font: true
@@ -53,3 +133,10 @@ dynamic_line_width: false
 inverter:
   auto_scale: true
   autarky: "no"
+  colour:
+    - 29
+    - 149
+    - 141
+  modern: true
+  model: growatt
+wide: true
