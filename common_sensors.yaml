@@ -2,17 +2,47 @@
 sensor:
   - platform: uptime
     name: "Uptime"
+    id: esp_uptime
+    icon: mdi:clock-check-outline
     entity_category: "diagnostic"
     device_class: duration
+    internal: true 
     update_interval: 60s
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: uptime_human
+            state: !lambda |-
+              int seconds = round(id(esp_uptime).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              seconds = seconds % 60;
+              return (
+                (days ? to_string(days) + "d " : "") +
+                (hours ? to_string(hours) + "h " : "") +
+                (minutes ? to_string(minutes) + "m " : "") +
+                (to_string(seconds) + "s")
+              ).c_str();
   - platform: internal_temperature
     name: "ESP Temperature"
+    icon: mdi:thermometer-lines
     update_interval: 60s    
   - platform: wifi_signal
     name: "RSSI"
     id: wifi_rssi
+    icon: mdi:wifi-arrow-left-right
     entity_category: "diagnostic"
     update_interval: 60s
 button:
   - platform: restart
-    name: "ESP Restart"
+    name: "!ESP Restart"
+    icon: mdi:restart
+text_sensor:
+  # Uptime Human Readable
+  - platform: template
+    name: "Uptime HR"
+    id: uptime_human
+    icon: mdi:clock-check-outline  
