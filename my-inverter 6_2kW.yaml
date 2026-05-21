@@ -1218,7 +1218,7 @@ text_sensor:
     response_size: 2
     raw_encode: HEXBYTES
     lambda: |-
-      uint16_t sensorIndex = swapBytes(modbus_controller::word_from_hex_str(x, 0));
+      uint16_t sensorIndex = swapBytes(modbus::helpers::word_from_hex_str(x, 0));
       static const char* working_states[] = {
         "Power On", "Test", "Stand By", "Invert Mode", 
         "Line Mode", "Bypass", "Fault Mode", "ShutDown"
@@ -1254,7 +1254,7 @@ text_sensor:
     # response_size: 2
     # raw_encode: HEXBYTES
     # lambda: |-
-      # uint16_t sensorIndex = swapBytes(modbus_controller::word_from_hex_str(x, 0));
+      # uint16_t sensorIndex = swapBytes(modbus::helpers::word_from_hex_str(x, 0));
       # switch (sensorIndex) {
         # case 0: return std::string("Solar Inverter");
         # case 1: return std::string("Voltage regulator");
@@ -1272,7 +1272,7 @@ text_sensor:
     # response_size: 2
     # raw_encode: HEXBYTES
     # lambda: |-
-      # uint16_t sensorIndex = swapBytes(modbus_controller::word_from_hex_str(x, 0));
+      # uint16_t sensorIndex = swapBytes(modbus::helpers::word_from_hex_str(x, 0));
       # switch (sensorIndex) {
         # case 0: return std::string("No Battery");
         # case 1: return std::string("24V");
@@ -1290,7 +1290,7 @@ text_sensor:
     response_size: 2
     raw_encode: HEXBYTES
     lambda: |-
-      uint16_t sensorIndex = swapBytes(modbus_controller::word_from_hex_str(x, 0));
+      uint16_t sensorIndex = swapBytes(modbus::helpers::word_from_hex_str(x, 0));
       static const char* source_options[] = {"Solar first", "Solar and Utility", "Only solar"};
       if (sensorIndex < 3) {
         return {source_options[sensorIndex]};
@@ -1317,7 +1317,7 @@ text_sensor:
     response_size: 2
     raw_encode: HEXBYTES
     lambda: |-
-      uint16_t sensorIndex = swapBytes(modbus_controller::word_from_hex_str(x, 0));
+      uint16_t sensorIndex = swapBytes(modbus::helpers::word_from_hex_str(x, 0));
       static const char* sensorStates[] = {"Utility first (USB)", "Solar first (SUB)", "SBU priority"};
       if (sensorIndex <= 2) {
         return std::string(sensorStates[sensorIndex]);
@@ -1342,7 +1342,7 @@ text_sensor:
     response_size: 2
     raw_encode: HEXBYTES
     lambda: |-
-      uint16_t value = swapBytes(modbus_controller::word_from_hex_str(x, 0));
+      uint16_t value = swapBytes(modbus::helpers::word_from_hex_str(x, 0));
       static const char* ranges[] = {"APL: 90-280 V", "UPS: 170-280 V"};
       if (value <= 1) {
         return std::string(ranges[value]);
@@ -1366,7 +1366,7 @@ text_sensor:
 #    response_size: 2
 #    raw_encode: HEXBYTES
 #    lambda: |-
-#      uint16_t value = swapBytes(modbus_controller::word_from_hex_str(x, 0));
+#      uint16_t value = swapBytes(modbus::helpers::word_from_hex_str(x, 0));
 #      switch (value) {
 #        case 0: return std::string("AGM");
 #        case 1: return std::string("Flooded");
@@ -1445,7 +1445,7 @@ text_sensor:
     # register_type: holding
     # raw_encode: HEXBYTES
     # lambda: |-
-      # uint8_t val = modbus_controller::byte_from_hex_str(x, 0);
+      # uint8_t val = modbus::helpers::byte_from_hex_str(x, 0);
       # val = val & 0x3;
       # ESP_LOGD("custom", "Battery Mode raw value: 0x%02X, interpreted value: %d", val, val);
       # if (val == 0 || val == 1 || val == 2 || val == 3) {
@@ -1467,7 +1467,7 @@ text_sensor:
     # register_type: holding
     # raw_encode: HEXBYTES
     # lambda: |-
-      # uint8_t val = modbus_controller::byte_from_hex_str(x, 0);
+      # uint8_t val = modbus::helpers::byte_from_hex_str(x, 0);
       # val = val & 0xC;
       # val = val >> 2;
       # ESP_LOGD("custom", "PV State raw value: 0x%02X, interpreted value: %d", val, val);
@@ -1491,7 +1491,7 @@ text_sensor:
     # register_type: holding
     # raw_encode: HEXBYTES
     # lambda: |-
-      # uint8_t val = modbus_controller::byte_from_hex_str(x, 0);
+      # uint8_t val = modbus::helpers::byte_from_hex_str(x, 0);
       # val = val & 0x30;
       # val = val >> 4;
       # ESP_LOGD("custom", "Mains Supply State raw value: 0x%02X, interpreted value: %d", val, val);
@@ -1515,7 +1515,7 @@ text_sensor:
     # register_type: holding
     # raw_encode: HEXBYTES
     # lambda: |-
-      # uint8_t val = modbus_controller::byte_from_hex_str(x, 0);
+      # uint8_t val = modbus::helpers::byte_from_hex_str(x, 0);
       # val = val & 0xC0;
       # val = val >> 6;
       # ESP_LOGD("custom", "Load State raw value: 0x%02X, interpreted value: %d", val, val);
@@ -1544,7 +1544,7 @@ text_sensor:
         {0x0d00, "Floating"}
       };
 
-      uint16_t sensorIndex = modbus_controller::word_from_hex_str(x, 0);
+      uint16_t sensorIndex = modbus::helpers::word_from_hex_str(x, 0);
         
       auto it = status_map.find(sensorIndex);
       if (it != status_map.end()) {
